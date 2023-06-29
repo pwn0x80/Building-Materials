@@ -1,4 +1,4 @@
-import {SearchLenSvg,CartSvg} from "core-ui";
+import { SearchLenSvg, CartSvg } from "core-ui";
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -8,8 +8,8 @@ const navigation = [
 ]
 export const BuyerNavbar = (props: {}) => {
   return (
-    <nav className='bg-primary fixed w-full left-0 '>
-      <div 
+    <nav className="bg-primary fixed w-full left-0">
+      <div
         className="nav-responsive">
         <div className='flex lg:w-fit md:w-fit sm:w-full '>
           <div> Logo </div>
