@@ -1,9 +1,9 @@
 import { createTheme } from "./utils";
-const baseTheme = createTheme({
+const light = createTheme({
   primary: "blue",
   secondary: "white",
   textBase: "white",
   btnbottomNavbar: "black",
   white:"white"
 });
-export default baseTheme;
+export default light;
