@@ -1,7 +1,11 @@
 import { IconToggle } from "@components/Icons/IconToggle";
+import dark from "@components/theme/darktheme";
+import light from '@components/theme/base';
+import { applyTheme } from "@components/theme/utils";
 import { IconProvider } from "@utils/context/ThemeSwitchContext";
 import { SearchLenSvg, CartSvg, LightModeIcon, DarkModeIcon } from "core-ui";
-import { themeOptionType, themeTypes } from "types/themes";
+import { useEffect, useReducer } from "react";
+import { initAction, themeAction, themeOptionType, themeReduceType, themeTypes } from "types/themes";
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -9,18 +13,39 @@ const navigation = [
   { name: 'More', href: '#', current: false },
   { name: 'Cart', href: '#', current: false, icon: <CartSvg /> },
 ]
-const themeOption:themeOptionType = {
+const themeOption: themeOptionType = {
   light: "light",
   dark: "dark"
 }
 
-const icons:themeTypes = {
+const icons: themeTypes = {
   light: <LightModeIcon />,
   dark: <DarkModeIcon />
 };
+
+function themeChangeReducer(state: themeReduceType, action: themeAction): themeReduceType {
+  if (action.type === "light") {
+    applyTheme(light);
+    return themeOption.light;
+  } else if (action.type === "dark") {
+    applyTheme(dark);
+    return themeOption.dark;
+  }
+  return state;
+}
+
 const DarkLightIcon = () => {
+
+  function init(): themeReduceType {
+    return themeOption.light;
+  }
+  const [themeState, onThemeDispatch] = useReducer(
+    themeChangeReducer,
+    themeOption.light,
+    () => { applyTheme(light); return "light" }
+  );
   return (
-    <IconProvider icons={icons} option={themeOption}>
+    <IconProvider themeState={themeState} icons={icons} option={themeOption} onThemeDispatch={onThemeDispatch}>
       <IconToggle />
     </IconProvider>
   )
