@@ -1,7 +1,6 @@
 export function applyTheme(theme) {
   const root = document.documentElement;
   Object.keys(theme).forEach((cssVar) => {
-    console.log(cssVar,theme)
     root.style.setProperty(cssVar, theme[cssVar]);
   });
 }

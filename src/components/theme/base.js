@@ -4,6 +4,7 @@ const light = createTheme({
   secondary: "white",
   textBase: "white",
   btnbottomNavbar: "black",
-  white:"white"
+  white:"white",
+  black: "black"
 });
 export default light;

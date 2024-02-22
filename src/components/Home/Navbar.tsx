@@ -20,7 +20,7 @@ const navigation = [
 ]
 export const Navbar = (props: {}) => {
   return (
-    <nav className='bg-blue-600 '>
+    <nav className='bg-gray-50'>
       <div className="flex  justify-around container mx-auto">
           <div className=''></div>
         <div className='flex nowrap'>

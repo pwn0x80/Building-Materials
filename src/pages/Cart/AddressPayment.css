@@ -1,0 +1,17 @@
+.containerAddress {
+  display: grid;
+  grid-template-areas: 
+    'A A B B' 
+    'C C D D' 
+    'E E E E' 
+    'F F G G';
+
+  @media screen and (max-width:880px){
+    grid-template-areas: 
+      'A A A A'
+      'B B B B'
+      'E E E E'
+      'C C D D'
+      'F F G G';
+  }
+}
