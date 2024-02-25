@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialState: { isUserLogin: boolean, cart: object } = {
+export type IUserStore = {
+  isUserLogin: boolean;
+  cart: {
+    [key: string]: any;
+  };
+}
+const initialState: IUserStore = {
   isUserLogin: false,
   cart: {}
 }
@@ -15,9 +21,23 @@ const UserSlice = createSlice({
     },
     setCart: (state, action) => {
       state.cart = action.payload.value;
+    },
+    addProductToCart: (state, action) => {
+      state.cart.products = [
+        ...state.cart.products,
+        action.payload.value
+      ]
+    },
+    removeProductFromCart: (state, action) => {
+      state.cart.filter((product: any) => {
+        if (product.pId == action.payload.value.productId) {
+          return false;
+        }
+        return true;
+      })
     }
   },
 })
 export default UserSlice.reducer;
-export const { isLoginSet,setCart } = UserSlice.actions;
+export const { isLoginSet, setCart, addProductToCart,removeProductFromCart } = UserSlice.actions;
 

@@ -1,18 +1,18 @@
 import { setCart } from "@redux/userSlice";
 
 export const fetchAndUpdateCart = async (dispatch: any) => {
-  try{
+  try {
 
-  const cart = await fetch("http://localhost/cart", {
-    method: "GET",
-    credentials: "include"
-  }).then(res => res.json());
-  if (cart?.status?.includes("USER_NOT_FOUND")) {
-  }
-  if (cart?.status?.includes("UPDATE_CART")) {
-    dispatch(setCart({ value: cart?.data?.cart }))
-  }
-  }catch(err){
+    const cart = await fetch("http://localhost/cart", {
+      method: "GET",
+      credentials: "include"
+    }).then(res => res.json());
+    if (cart?.status?.includes("USER_NOT_FOUND")) {
+    }
+    if (cart?.status?.includes("UPDATE_CART")) {
+      dispatch(setCart({ value: cart?.data?.cart }))
+    }
+  } catch (err) {
     console.log(err);
   }
 }
