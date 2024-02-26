@@ -8,7 +8,9 @@ import { LoaderSkeleton } from '../../pages/SingleProduct/LoaderSkeleton';
 import { fetcher } from '@utils/swrFetcher/swrFetcher';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductToCart, IUserStore, removeProductFromCart } from '@redux/userSlice';
-import { isNone, none, some } from 'fp/option';
+import { isNone, none, some,match } from 'fp/option';
+import { addProductToCartAction, removeProductFromCartAction } from '@redux/actions/cartActions';
+import {pipe} from "fp/pipe"
 const LeftIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-7 h-7">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -29,55 +31,11 @@ interface IProduct {
   price: number
   status: boolean
 }
-const isProductInCart = (productId: string, cartStore: any) => {
-  if (!cartStore) return none;
-  for (let product of cartStore) {
-    if (product?.pId == productId) return some(product);
-  }
-  return none;
-}
 
-const dispatchAddProductToCartStore = (product: any, dispatch: any) => {
-  dispatch(addProductToCart({
-    value: {
-      pId: product._id,
-      name: product.name,
-      qty: product.qty | 1,
-      price: product.price
-    }
-  }))
-}
-const dispatchRemoveProductFromCartStore = (productId: any, dispatch: any) => {
-  dispatch(removeProductFromCart({ value: productId }))
-}
-const addToCart = (data: any, dispatch: any) => {
-  dispatchAddProductToCartStore(data, dispatch)
-  let prd = {
-    data: {
-      id: data?._id.toString(),
-      inventoryId: data?.inventoryId,
-      name: data?.name,
-      qty: data?.qty,
-      price: data?.price,
-      imgUrls: data?.imageUrls
-    }
+const fromNullable = (x: any) => {
+  if (typeof (x) == 'undefined') {
+    return none
   }
-  return fetch("http://localhost:8000/cart/addProduct", {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(prd)
-  }).then((response) => response.json())
-    .then((data) => {
-      if (data.status.includes("ERROR")) {
-        throw (data.message)
-      }
-    }).catch((err: any) => {
-      dispatchRemoveProductFromCartStore(data._id, dispatch)
-      console.log(err);
-    })
 }
 
 export const SingleProductDetailCard = () => {
@@ -91,26 +49,31 @@ export const SingleProductDetailCard = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
 
-  const onAddToCart = (data: any) => {
-    if (isLoginStore) {
-      if (isNone(isProductInCart(data._id, cartStore))) {
-        return addToCart(data, dispatch);
-      }
-    } else {
-      navigate("/login")
+  const onAddToCart = async(data: any) => {
+    try {
+      if (!isLoginStore) {navigate("/login"); return}
+      pipe(isProductInCart,
+         await match(
+          async() => { await addToCart(data, dispatch) },
+          () => { navigate("/cart") }
+        ))(data)
+    } catch (err: any) {
+      console.log(err)
     }
 
   }
   const onBuyProduct = async (data: any) => {
     setOnBuyState(true);
-    if (isLoginStore) {
-      if (isNone(isProductInCart(data._id, cartStore))) {
-        await addToCart(data, dispatch);
-        navigate("/cart")
-      }
-    } else {
-      navigate("/login")
-    }
+    if (!isLoginStore) navigate("/login")
+    pipe(
+      isProductInCart,
+       await match(
+         async () => {  await addToCart(data, dispatch); navigate("/cart") },
+        () => { navigate("/cart") }
+      )
+    )(data)
+
+
   }
 
 
@@ -211,3 +174,42 @@ export const SingleProductDetailCard = () => {
     </div >
   )
 }
+const isProductInCart = (productId: string, cartStore: any) => {
+  if (!cartStore) return none;
+  for (let product of cartStore) {
+    if (product?.pId == productId) return some(product);
+  }
+  return none;
+}
+
+const addToCart = async (data: any, dispatch: any) => {
+  console.log(data.imageUrls[0])
+  addProductToCartAction(data, dispatch)
+  let prd = {
+    data: {
+      id: data?._id.toString(),
+      inventoryId: data?.inventoryId,
+      name: data?.name,
+      qty: data?.qty,
+      price: data?.price,
+      imgUrls: data?.imageUrls[0]
+    }
+  }
+  return fetch("http://localhost:8000/cart/addProduct", {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(prd)
+  }).then((response) => response.json())
+    .then((data) => {
+      if (data.status.includes("ERROR")) {
+        throw (data.message)
+      }
+    }).catch((err: any) => {
+      removeProductFromCartAction(data._id, dispatch)
+      console.log(err);
+    })
+}
+

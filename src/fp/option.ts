@@ -12,5 +12,9 @@ export const IsNoneAsync = async <A,>(X: Promise<Option<A>>) => {
   const response = await X;
   return (response._tag === "None") ? true : false
 }
+export const match = async(onNone: Function, onSome: Function) => async<A>(type: Option<A>) => {
+  isNone(type) ? await onNone() : await onSome(type.value)
+}
+
 
 export const isNone = <A,>(x: Option<A>): x is None => x._tag === 'None';
