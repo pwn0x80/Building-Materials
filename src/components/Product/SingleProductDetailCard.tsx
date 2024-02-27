@@ -8,9 +8,11 @@ import { LoaderSkeleton } from '../../pages/SingleProduct/LoaderSkeleton';
 import { fetcher } from '@utils/swrFetcher/swrFetcher';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductToCart, IUserStore, removeProductFromCart } from '@redux/userSlice';
-import { isNone, none, some,match } from 'fp/option';
+import { isNone, none, some, match } from 'fp/option';
 import { addProductToCartAction, removeProductFromCartAction } from '@redux/actions/cartActions';
-import {pipe} from "fp/pipe"
+import { pipe } from "fp/pipe"
+import { tryCatch } from 'fp/TaskEither';
+import { jsonParser } from 'fp/json';
 const LeftIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-7 h-7">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -32,12 +34,11 @@ interface IProduct {
   status: boolean
 }
 
-const fromNullable = (x: any) => {
-  if (typeof (x) == 'undefined') {
-    return none
-  }
-}
 
+const debug = (str: any) => {
+  console.log(str);
+  return str
+}
 export const SingleProductDetailCard = () => {
   let { prdName, id } = useParams();
   const { data, error, isLoading } = useSWR<IProduct>((`${process.env.REACT_APP_API_BASE_URL}product/getProductById?pdName=${prdName}&pdId=${id}`), fetcher)
@@ -49,31 +50,35 @@ export const SingleProductDetailCard = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
 
-  const onAddToCart = async(data: any) => {
+  const onAddToCart = async (data: any) => {
     try {
-      if (!isLoginStore) {navigate("/login"); return}
-      pipe(isProductInCart,
-         await match(
-          async() => { await addToCart(data, dispatch) },
+      if (!isLoginStore) { navigate("/login"); return }
+      if(!cartStore) {return}
+      pipe(isProductInCart(cartStore),
+        await match(
+          async () => { await addToCart(data, dispatch) },
           () => { navigate("/cart") }
-        ))(data)
+        ))(data._id)
     } catch (err: any) {
       console.log(err)
     }
 
   }
   const onBuyProduct = async (data: any) => {
-    setOnBuyState(true);
-    if (!isLoginStore) navigate("/login")
-    pipe(
-      isProductInCart,
-       await match(
-         async () => {  await addToCart(data, dispatch); navigate("/cart") },
-        () => { navigate("/cart") }
-      )
-    )(data)
-
-
+    try {
+      setOnBuyState(true);
+      if (!isLoginStore) navigate("/login")
+      if(!cartStore) {return}
+      pipe(
+        isProductInCart(cartStore),
+        await match(
+          async () => { await addToCart(data, dispatch); navigate("/cart") },
+          () => { navigate("/cart") }
+        )
+      )(data._id)
+    } catch (err) {
+      console.log(err);
+    }
   }
 
 
@@ -141,7 +146,7 @@ export const SingleProductDetailCard = () => {
 
         <div className='flex gap-2'>
           <div className='bg-gray-300 min-w-31 min-h-fit '>
-            {isNone(isProductInCart(data?._id, cartStore)) ?
+            {isNone(isProductInCart(cartStore)(data?._id)) ?
               <button onClick={() => onAddToCart(data)}
                 className='px-3 text-sm py-2 rounded-sm uppercase w-32 font-bold text-[0.7rem] sm:text-[0.8rem]'>
                 Add to Cart</button> :
@@ -174,16 +179,18 @@ export const SingleProductDetailCard = () => {
     </div >
   )
 }
-const isProductInCart = (productId: string, cartStore: any) => {
+
+
+
+const isProductInCart = (cartStore: any)=>(productId: string) => {
   if (!cartStore) return none;
   for (let product of cartStore) {
-    if (product?.pId == productId) return some(product);
+    if (product?.pId == productId) { console.log("found"); return some(product); }
   }
   return none;
 }
 
 const addToCart = async (data: any, dispatch: any) => {
-  console.log(data.imageUrls[0])
   addProductToCartAction(data, dispatch)
   let prd = {
     data: {
@@ -195,21 +202,21 @@ const addToCart = async (data: any, dispatch: any) => {
       imgUrls: data?.imageUrls[0]
     }
   }
-  return fetch("http://localhost:8000/cart/addProduct", {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(prd)
-  }).then((response) => response.json())
-    .then((data) => {
-      if (data.status.includes("ERROR")) {
-        throw (data.message)
-      }
-    }).catch((err: any) => {
-      removeProductFromCartAction(data._id, dispatch)
-      console.log(err);
-    })
+  return tryCatch(
+    () => fetch("http://localhost:8000/cart/addProduct", {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(prd)
+    }).then(jsonParser)
+      .then((data) => {
+        if (data.status.includes("ERROR")) {
+          throw (data.message)
+        }
+      }),
+    (err) => { console.log(err); removeProductFromCartAction(data._id, dispatch) }
+  )()
 }
 
