@@ -1,10 +1,13 @@
+import { setCartEmpty } from "@redux/userSlice"
 import { error } from 'console'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import "./AddressPayment.css"
 export const PaymentOptions = () => {
   const { register, handleSubmit, formState: { errors } } = useForm()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const onSubmit = async (formData: any) => {
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}order/placeOrder`, {
@@ -15,10 +18,20 @@ export const PaymentOptions = () => {
         'accept': 'application/json, text/plain, */*'
       },
       body: JSON.stringify(formData)
-    }).then((res) => res.json());
-    if (response.status.includes("ORDER_PLACED")) {
-      navigate("/orders", { replace: true });
-    }
+    }).then(async (res) => {
+      if (res.redirected) {
+        const pathUrl = new URL(res.url).pathname
+        return navigate(pathUrl, { replace: true })
+      } else {
+        const response = await res.json()
+        if (response?.status?.includes("ORDER_PLACED")) {
+            dispatch(setCartEmpty({}))
+          //TODO Dispatch update cart details
+          navigate("/orders", { replace: true });
+        }
+
+      }
+    })
   }
   return (
     <div className='pt-12 container'>
@@ -44,8 +57,8 @@ const PaymentMethod = ({ register, errors }: any) => {
           )}
         /> COD
       </div>
-      <div>
-        <input name="optPayment" type="radio"
+      <div className='opacity-50'>
+        <input disabled name="optPayment" type="radio"
           value="ONLINE"
           {...register("optPayment", {
             required: { message: "required payment option" },
@@ -94,7 +107,7 @@ const DeliveryAddress = ({ register, errors }: any) => {
               className='w-full p-1' type="number" id="ph" />
           </div>
 
-          {errors?.number && <div className='italic text-xs text-red-500'>{errors?.number?.message as string}</div>}
+          {errors?.phNo && <div className='italic text-xs text-red-500'>{errors?.phNo?.message as string}</div>}
         </div>
         <div style={{ gridArea: "C" }}>
           <div style={{ border: '1px solid rgba(0,0,0,.24)' }}>

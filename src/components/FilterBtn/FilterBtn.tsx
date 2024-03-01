@@ -52,12 +52,10 @@ const  tmpData= [
         name:"sheet"
     },
 ];
-
 export default function FilterBtn() {
     const [stateClick,setBtnOnClicked ]= useState("");
     useEffect(()=>{
 
-        if(stateClick===""){ console.log("null type") }else{ console.log("test")}
     },[stateClick])
     return (
         <div className="container gap-x-3 grid  grid-cols-[min-content,1fr] sm:grid-cols-[min-content,60%] ">

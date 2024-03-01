@@ -16,7 +16,7 @@ function fetchData<T>(url: string): WrapPromiseResult<T> {
   signal: controller.signal
 })
     .then((res) => res.json())
-    .then((res) => {console.log(res);return res;})
+    .then((res) => {return res;})
 
 // setTimeout(() => controller.abort(), 1000);
   return wrapPromise(promise,controller);

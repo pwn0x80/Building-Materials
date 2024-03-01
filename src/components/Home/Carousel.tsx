@@ -34,10 +34,11 @@ export const Carousel: React.FC = () => {
     <div className="container pt-[58px]">
       <Slider
          img={[ 
-          "https://media.istockphoto.com/id/821134188/photo/construction-iron.jpg?s=2048x2048&w=is&k=20&c=t9mWDX3E51_tPZo593YnumOKJ84yOohMgWykJG67DOA=",
+         "https://files.catbox.moe/grwdtn.jpeg", 
+          // "https://files.catbox.moe/y91mab.jpg",
           "https://media.istockphoto.com/id/836200296/photo/abstract-pattern-of-aged-pvc-pipe-with-sun-lights.jpg?s=1024x1024&w=is&k=20&c=30OHWqC5rjnVYSwYERmDAqMFc1rH0DeWiVT3FMzkFBI=",
-          "https://flowbite.com/docs/images/carousel/carousel-1.svg",
-          "https://media.istockphoto.com/id/821134188/photo/construction-iron.jpg?s=2048x2048&w=is&k=20&c=t9mWDX3E51_tPZo593YnumOKJ84yOohMgWykJG67DOA=",
+          // "https://flowbite.com/docs/images/carousel/carousel-1.svg",
+          // "https://media.istockphoto.com/id/821134188/photo/construction-iron.jpg?s=2048x2048&w=is&k=20&c=t9mWDX3E51_tPZo593YnumOKJ84yOohMgWykJG67DOA=",
         ]}
       />
     </div>

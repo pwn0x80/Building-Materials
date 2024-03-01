@@ -35,10 +35,6 @@ interface IProduct {
 }
 
 
-const debug = (str: any) => {
-  console.log(str);
-  return str
-}
 export const SingleProductDetailCard = () => {
   let { prdName, id } = useParams();
   const { data, error, isLoading } = useSWR<IProduct>((`${process.env.REACT_APP_API_BASE_URL}product/getProductById?pdName=${prdName}&pdId=${id}`), fetcher)
@@ -53,7 +49,7 @@ export const SingleProductDetailCard = () => {
   const onAddToCart = async (data: any) => {
     try {
       if (!isLoginStore) { navigate("/login"); return }
-      if(!cartStore) {return}
+      if (!cartStore) { return }
       pipe(isProductInCart(cartStore),
         await match(
           async () => { await addToCart(data, dispatch) },
@@ -66,9 +62,9 @@ export const SingleProductDetailCard = () => {
   }
   const onBuyProduct = async (data: any) => {
     try {
-      setOnBuyState(true);
       if (!isLoginStore) navigate("/login")
-      if(!cartStore) {return}
+      if (!cartStore) { return }
+      setOnBuyState(true);
       pipe(
         isProductInCart(cartStore),
         await match(
@@ -182,10 +178,10 @@ export const SingleProductDetailCard = () => {
 
 
 
-const isProductInCart = (cartStore: any)=>(productId: string) => {
+const isProductInCart = (cartStore: any) => (productId: string) => {
   if (!cartStore) return none;
   for (let product of cartStore) {
-    if (product?.pId == productId) { console.log("found"); return some(product); }
+    if (product?.pId == productId) {return some(product); }
   }
   return none;
 }
@@ -203,7 +199,7 @@ const addToCart = async (data: any, dispatch: any) => {
     }
   }
   return tryCatch(
-    () => fetch("http://localhost:8000/cart/addProduct", {
+    () => fetch(process.env.REACT_APP_API_BASE_URL + "cart/addProduct", {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -216,7 +212,7 @@ const addToCart = async (data: any, dispatch: any) => {
           throw (data.message)
         }
       }),
-    (err) => { console.log(err); removeProductFromCartAction(data._id, dispatch) }
+    (err) => { removeProductFromCartAction(data._id, dispatch) }
   )()
 }
 

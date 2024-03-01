@@ -164,7 +164,6 @@ const AddProductContext = (props: {}) => {
     for (let file of Object.entries(imageState)) {
       form.append('itemImg', file[1]);
     }
-    // console.log(form.getAll('itemImg'))
     fetch("http://127.0.0.1:8000/admin/addProduct", {
       method: "POST",
       body: form,

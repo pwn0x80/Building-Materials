@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 const UserIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
     <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
@@ -74,18 +74,18 @@ export const AdminSideNavbar = (props: {}) => {
           <div className='pr-1 '>
             <UserIcon />
           </div>
-          <div className='hidden sm:block'>
+          <Link to={"/admin"} className='hidden sm:block'>
             Admin
-          </div>
+          </Link>
         </div>
-        <div className='flex px-3 py-2 items-center sm:justify-start justify-center font-semibold text-lg   text-[white]'>
+        <Link to={"/admin"} className='flex px-3 py-2 items-center sm:justify-start justify-center font-semibold text-lg   text-[white]'>
           <div className='pr-1 '>
             <DashboardIcon />
           </div>
           <div className='hidden sm:block'>
             Dashboard
           </div>
-        </div>
+        </Link>
 
 
 
@@ -106,14 +106,14 @@ export const AdminSideNavbar = (props: {}) => {
         </div>
         {productDropdownState &&
           <div className='px-0 sm:px-6 text-sm bg-[#002d63]'>
-            <div className='flex  py-2 items-center sm:justify-start justify-center font-semibold    text-[white]'>
+            <Link to={"/admin/product/add"} className='flex  py-2 items-center sm:justify-start justify-center font-semibold    text-[white]'>
               <div className='pr-1 '>
                 <PlusIcon />
               </div>
               <div className='hidden sm:block'>
                 Add Product
               </div>
-            </div>
+            </Link>
 
             <div className='flex py-2  sm:justify-start justify-center font-semibold   text-[white]'>
               <div className='pr-1 '>

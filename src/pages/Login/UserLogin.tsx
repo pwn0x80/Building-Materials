@@ -2,7 +2,7 @@ import isUserLoginAndUpdateCart from 'auth/isLoginAndUpdateCart';
 import React, { useEffect, useReducer, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 
 export const UserLogin = (props: {}) => {
@@ -66,7 +66,11 @@ export const UserLogin = (props: {}) => {
               })}
             ></input>
             {errors.password && <div className='italic text-xs text-red-500'>{errors.password.message as string}</div>}
-            <div className='text-sm italic font-bold text-[darkslategrey]'>Don't have an account? Sign Up</div>
+            <div className='text-sm italic font-bold text-[darkslategrey]'>Don't have an account? {" "}  
+              <Link to="/register"> 
+               Sign Up
+              </Link>
+            </div>
             <div className='pt-3'>
               <button className='bg-gray-300 text-gray-800 md:w-3/12 w-[300px]  h-[30px] rounded-md'>Log in</button>
             </div>

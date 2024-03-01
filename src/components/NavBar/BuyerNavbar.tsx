@@ -8,12 +8,18 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import { initAction, themeAction, themeOptionType, themeReduceType, themeTypes } from "types/themes";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import useSWRMutation from 'swr/mutation'
+import { useSelector } from "react-redux";
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
-  { name: 'Log in', href: '/login', current: true },
-  { name: 'More', href: '#', current: false },
+  // { name: 'Log in', href: '/login', current: true },
+  // { name: 'More', href: '#', current: false },
   { name: 'Cart', href: '/cart', current: false, icon: <CartSvg /> },
 ]
+
+const loginNavigation = [
+  { name: 'Log in', href: '/login', current: true },
+]
+
 const themeOption: themeOptionType = {
   light: "light",
   dark: "dark"
@@ -54,6 +60,7 @@ const DarkLightIcon = () => {
 
 export const BuyerNavbar = (props: {}) => {
   const [isActiveState, setActiveState] = useState(false);
+  const isLogin = useSelector((state: any) => state.userDetail.isUserLogin)
   let isActive = () => {
     window.scrollY > 0 ? setActiveState(true) : setActiveState(false)
   }
@@ -73,12 +80,37 @@ export const BuyerNavbar = (props: {}) => {
         <div
           className="nav-responsive">
           <div className='flex lg:w-fit md:w-fit sm:w-full '>
-            <Link to="/">
-              <div> Logo </div>
+            <Link className="flex justify-center items-center" to="/">
+              {/* <div> Logo </div> */}
+              <img className="h-8 rounded" src="https://files.catbox.moe/4wg1kp.png"/>
             </Link>
             <SearchDropDown />
           </div>
           <div className="sm:inline-flex hidden md:flex ">
+            {!isLogin ?
+              <Link
+                className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
+                key={'Log in'}
+                to={"/login"}
+              // aria-current={item.current ? 'page' : undefined}
+              >
+                {/* <span className='px-2'> */}
+                {/* {item?.icon ? item.icon : ""} */}
+                {/* </span> */}
+                {"Log in"}
+              </Link> :
+              <Link
+                className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
+                key={'account'}
+                to={"/account"}
+              // aria-current={item.current ? 'page' : undefined}
+              >
+                {/* <span className='px-2'> */}
+                {/* {item?.icon ? item.icon : ""} */}
+                {/* </span> */}
+                {"Account"}
+              </Link>
+            }
 
             {navigation.map((item) => (
               <Link
@@ -158,9 +190,9 @@ const SearchDropDown = () => {
         setShow(true)
     }
   }, [!isMutating])
-  const  onSubmitTrigger=(evt:any)=>{
+  const onSubmitTrigger = (evt: any) => {
     evt.preventDefault()
-    navigate("/s/"+evt.currentTarget.elements.searchInput.value)
+    navigate("/s/" + evt.currentTarget.elements.searchInput.value)
 
   }
   return (
@@ -169,9 +201,9 @@ const SearchDropDown = () => {
         <input
           id="searchInput"
           onChange={curryingSearch(trigger)}
-           placeholder='Search for Products' type="input" className='bg-white  px-1.5 outline-none lg:w-[30vw] md:w-[50vw] sm:w-fit	 py-0.2 text-black-400' />
-       <button type="submit"  onClick={() => setShow(false)} > 
-        <SearchLenSvg color="black"  />
+          placeholder='Search for Products' type="input" className='bg-white  px-1.5 outline-none lg:w-[30vw] md:w-[50vw] sm:w-fit	 py-0.2 text-black-400' />
+        <button type="submit" onClick={() => setShow(false)} >
+          <SearchLenSvg color="black" />
         </button>
       </form>
 

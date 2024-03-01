@@ -19,6 +19,8 @@ import { Order } from '@pages/Order/Order';
 import { MyAccount } from '@pages/MyAccount/MyAccount';
 import { Location } from '@pages/AdminDashboard/Location';
 import isUserLoginAndUpdateCart from 'auth/isLoginAndUpdateCart';
+import { UserProtectedRoute } from 'route/UserProtectedRoute';
+import { AdminProtectedRoute } from 'route/AdminProtectedRoute';
 const AdminPanel = React.lazy(() => import("@pages/AdminDashboard/AdminPanel"))
 
 
@@ -27,6 +29,7 @@ const AdminDashboardRouter = () => {
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+            <Route  element={<AdminProtectedRoute />}>
           <Route element={<AdminSideNavbar />}>
             <Route element={<AdminNavbar />}>
               {/* <Route element={<MobBuyerNavbar />}> */}
@@ -34,6 +37,7 @@ const AdminDashboardRouter = () => {
               <Route path="/admin/product/add" element={<AddProduct />} />
               <Route path="/admin/category/add" element={<AddCategory />} />
               <Route path="/admin/location" element={<Location />} />
+              </Route>
             </Route>
           </Route>
           {/* </Route> */}
@@ -42,7 +46,9 @@ const AdminDashboardRouter = () => {
     </BrowserRouter>
   )
 }
-const UserRouter = () => {
+
+
+const VisitorRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -51,10 +57,13 @@ const UserRouter = () => {
             <Route path="/" element={<Home />} />
             <Route path="/c/:cty" element={<CategoryProductList />} />
             <Route path="/s/:prd" element={<SearchProducts />} />
+
+            <Route  element={<UserProtectedRoute />}>
+              <Route path="/orders" element={<Order />} />
+              <Route path="/account" element={<MyAccount />} />
+            </Route>
             <Route path="/cart" element={<Cart />} />
-            <Route path="/orders" element={<Order />} />
             <Route path="/payment" element={<PaymentOptions />} />
-            <Route path="/account" element={<MyAccount />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/register" element={<UserRegister />} />
             <Route path="/p/:prdName/:id" element={<SingleProduct />} />
@@ -74,7 +83,7 @@ function App() {
   return (
     <>
       <AdminDashboardRouter />
-      <UserRouter />
+      <VisitorRouter />
     </>
 
   )

@@ -32,36 +32,25 @@ const CategoryOption = () => {
       refreshWhenHidden: false,
       refreshInterval: 0
     })
-  if (error) {
-    return (
-      <div>
-        error
-      </div>
-    )
-  }
-  if (isLoading) {
-    return (
-      <div>
-        loading...
-      </div>
-    )
-  }
 
-  return (
-    <div>
-      <div className='bg-blue-700 px-5 py-10 rounded-lg'>
-        <div className='text-white px-2 py-2 rounded-md bg-blue-900 text-2xl'>Category List </div>
+  return error ?
+    handleError() :
+    isLoading ?
+      handleLoading("loading...") : (
+        <div>
+          <div className='bg-blue-700 px-5 py-10 rounded-lg'>
+            <div className='text-white px-2 py-2 rounded-md bg-blue-900 text-2xl'>Category List </div>
 
-        <div className='flex gap-3 flex-row capitalize lg:flex-col flex-wrap px-3 font-bold text-white'>
-          {data?.map((ctyItem) => {
-            return (
-          <Link to={`/c/${ctyItem?.cty}`}>{ctyItem?.cty}</Link>
-            )
-          })}
+            <div className='flex gap-3 flex-row capitalize lg:flex-col flex-wrap px-3 font-bold text-white'>
+              {data?.map((ctyItem) => {
+                return (
+                  <Link to={`/c/${ctyItem?.cty}`}>{ctyItem?.cty}</Link>
+                )
+              })}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  )
+      )
 }
 
 const CategoryHeader = () => {
@@ -82,3 +71,19 @@ const CategoryHeader = () => {
     </>
   )
 }
+const handleError = () => {
+  return (
+    <>
+      Something Went Wrong.
+    </>
+  )
+}
+
+const handleLoading = (loadingMessage: any) => {
+  return (
+    <>
+      {loadingMessage}
+    </>
+  )
+}
+

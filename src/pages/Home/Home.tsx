@@ -6,10 +6,14 @@ import React from 'react'
 export const Home = (props: {}) => {
  
   return (
-    <div>
+    <div className='pb-12'>
       <Carousel />
       <FeatureCard />
       <ScrollCard />
+      {/* TODO create separate component */}
+      <div className='py-12 flex justify-center items-center'>
+        <img src={"https://files.catbox.moe/m8o16n.png"} />
+      </div>
 
     </div>
   )

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetcher } from '@utils/swrFetcher/swrFetcher';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 
@@ -51,7 +51,7 @@ export const SearchProducts = (props: {}) => {
           console.log(details)
         }}
       >
-        <div className="container grid gap-[0.4rem] place-items-center grid-cols-[repeat(auto-fill,minmax(282px,1fr))] pt-[60px] ">
+        <div className="container grid gap-[0.4rem] place-items-center grid-cols-[repeat(auto-fill,minmax(282px,1fr))] pt-[73px]">
           <div hidden> <ProductCard pageSetfn={setTotalPageTrigger} pageNumber={pageNumber == null ? 2 : Number(pageNumber) + 1} /></div>
           <ProductCard pageSetfn={setTotalPageTrigger} pageNumber={pageNumber} />
         </div>
@@ -127,14 +127,14 @@ h-8 items-center flex justify-center`}> {pageNumber}</div>
   )
 }
 
-const searchFetcher = async (url:string)=>{
+const searchFetcher = async (url: string) => {
 
-  return await fetch(url).then((data)=>data.json());
+  return await fetch(url).then((data) => data.json());
 }
 
 
 const ProductCard = ({ pageSetfn, pageNumber }: any) => {
-  let { prd} = useParams();
+  let { prd } = useParams();
   const { data, error, isLoading } =
     useSWR<any>(
       `${process.env.REACT_APP_API_BASE_URL}product/searchProducts?${(pageNumber == null || pageNumber < 1) ? `page=1` : `page=${pageNumber}`}&param=${prd}`,
@@ -179,27 +179,42 @@ const ProductCard = ({ pageSetfn, pageNumber }: any) => {
       {
         products?.map((product: any, key: any) => {
           return (
-            <div key={key} className=" rounded-md gap-x-1 overflow-hidden min-w-64 max-w-64  shadow-lg">
+            <Link to={`/p/${product.name}/${product._id}`} key={key} className="outline outline-1 outline-gray-300 rounded-sm gap-x-1 overflow-hidden min-w-64 max-w-64  shadow-lg">
               <div className='flex justify-center h-[200px]' >
                 <img className="w-fit" src="https://5.imimg.com/data5/SELLER/Default/2021/6/CI/XK/WT/9525668/cement-250x250.jpg" alt="Sunset in the mountains" />
               </div>
               <div className='bg-gray-100'>
                 <div className="px-6 py-4">
-                  <div className="font-bold text-lg mb-2 line-clamp-2">
+                  <div className="font-bold text-lg mb-1 line-clamp-2">
                     {product?.name}
                   </div>
-                  {/* <p className="min-h-24 text-gray-700 text-base line-clamp-4"> */}
-                  {/*   {product?.description} */}
-                  {/* </p> */}
+                  <div className="font-bold text-md mb-0 line-clamp-2">
+                    {product?.price}
+                  </div>
+
+                  <p style={{overflowWrap:"anywhere"}} className="font-extralight min-h-12 text-gray-700 text-base line-clamp-2">
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                    {product?.description}
+                  </p>
                 </div>
-                <div className="px-6 pt-4 pb-2 min-h-16">
+                <div className="px-6 pt-1  min-h-16">
                   <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                     {product?.category}
                   </span>
                 </div>
               </div>
 
-            </div>
+            </Link>
           )
         })
       }
