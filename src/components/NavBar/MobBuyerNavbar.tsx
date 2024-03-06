@@ -1,6 +1,6 @@
 import { CartSvg, HomeSvg, ProfileSvg } from 'core-ui'
 import { useSelector } from 'react-redux'
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet, Link, NavLink } from 'react-router-dom'
 
 const BTN_TXT = {
   account: "Account",
@@ -20,20 +20,39 @@ export const MobBuyerNavbar = (props: {}) => {
         <div className="fixed bottom-0 left-0 z-50 w-full h-16  border-gray-200 bg-blue-900">
           <div className="grid h-full max-w-lg grid-cols-3 mx-auto font-medium">
             {isLogin ?
-              <Link to={"/account"} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
+
+                to={"/account"} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
                 <ProfileSvg />
                 <span className="text-sm text-btnBottomNavbar dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">Account</span>
-              </Link> :
-              <Link to={"/login"} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
+              </NavLink> :
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
+                to={"/login"} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
                 <ProfileSvg />
                 <span className="text-sm text-btnBottomNavbar dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">Login</span>
-              </Link>
+              </NavLink>
             }
             {navigation.map((item, key) => (
-              <Link to={item.href} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
+                to={item.href} type="button" className="inline-flex flex-col items-center justify-center px-5  group">
                 {item.icon}
                 <span className="text-sm text-btnBottomNavbar dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">{item?.name}</span>
-              </Link>
+              </NavLink>
             ))}
 
 

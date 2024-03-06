@@ -4,7 +4,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { isLoginSet, setUserRole } from "@redux/userSlice";
 
 const isUserLogin = async (dispatch: Dispatch<any>): Promise<Option<Object>> => {
-  return fetch("http://localhost:8000/v", {
+  return fetch(process.env.REACT_APP_API_BASE_URL+"v", {
     method: "GET",
     credentials: "include"
   }).then((response) => response.json())

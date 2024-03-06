@@ -30,7 +30,7 @@ export const MyAccount = (props: {}) => {
               Profile
             </span>
           </div>
-          <Link to="/orders" className='p-2 flex gap-1 sm:flex-row flex-col items-center'>
+          <Link to="/account/orders" className='p-2 flex gap-1 sm:flex-row flex-col items-center'>
             <span>
               <OrderIcon />
             </span>

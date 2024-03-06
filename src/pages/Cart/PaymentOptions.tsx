@@ -27,7 +27,7 @@ export const PaymentOptions = () => {
         if (response?.status?.includes("ORDER_PLACED")) {
             dispatch(setCartEmpty({}))
           //TODO Dispatch update cart details
-          navigate("/orders", { replace: true });
+          navigate("/account/orders", { replace: true });
         }
 
       }

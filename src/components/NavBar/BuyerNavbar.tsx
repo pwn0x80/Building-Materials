@@ -6,7 +6,7 @@ import { IconProvider } from "@utils/context/ThemeSwitchContext";
 import { SearchLenSvg, CartSvg, LightModeIcon, DarkModeIcon } from "core-ui";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { initAction, themeAction, themeOptionType, themeReduceType, themeTypes } from "types/themes";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import useSWRMutation from 'swr/mutation'
 import { useSelector } from "react-redux";
 const navigation = [
@@ -82,13 +82,18 @@ export const BuyerNavbar = (props: {}) => {
           <div className='flex lg:w-fit md:w-fit sm:w-full '>
             <Link className="flex justify-center items-center" to="/">
               {/* <div> Logo </div> */}
-              <img className="h-8 rounded" src="https://files.catbox.moe/4wg1kp.png"/>
+              <img className="h-8 rounded" src="https://files.catbox.moe/4wg1kp.png" />
             </Link>
             <SearchDropDown />
           </div>
           <div className="sm:inline-flex hidden md:flex ">
             {!isLogin ?
-              <Link
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
                 className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
                 key={'Log in'}
                 to={"/login"}
@@ -98,8 +103,13 @@ export const BuyerNavbar = (props: {}) => {
                 {/* {item?.icon ? item.icon : ""} */}
                 {/* </span> */}
                 {"Log in"}
-              </Link> :
-              <Link
+              </NavLink> :
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
                 className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
                 key={'account'}
                 to={"/account"}
@@ -109,11 +119,16 @@ export const BuyerNavbar = (props: {}) => {
                 {/* {item?.icon ? item.icon : ""} */}
                 {/* </span> */}
                 {"Account"}
-              </Link>
+              </NavLink>
             }
 
             {navigation.map((item) => (
-              <Link
+              <NavLink
+                style={({ isActive, isPending, isTransitioning }) => {
+                  return {
+                    fontWeight: isActive ? "bold" : "",
+                  };
+                }}
                 className='px-2 flex items-center text-white whitespace-nowrap '
                 key={item.name}
                 to={item.href}
@@ -123,7 +138,7 @@ export const BuyerNavbar = (props: {}) => {
                   {item?.icon ? item.icon : ""}
                 </span>
                 {item.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
           <a

@@ -59,7 +59,7 @@ const VisitorRouter = () => {
             <Route path="/s/:prd" element={<SearchProducts />} />
 
             <Route  element={<UserProtectedRoute />}>
-              <Route path="/orders" element={<Order />} />
+              <Route path="/account/orders" element={<Order />} />
               <Route path="/account" element={<MyAccount />} />
             </Route>
             <Route path="/cart" element={<Cart />} />

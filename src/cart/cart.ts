@@ -3,7 +3,7 @@ import { setCart } from "@redux/userSlice";
 export const fetchAndUpdateCart = async (dispatch: any) => {
   try {
 
-    const cart = await fetch("http://localhost/cart", {
+    const cart = await fetch(process.env.REACT_APP_API_BASE_URL+"cart", {
       method: "GET",
       credentials: "include"
     }).then(res => res.json());
