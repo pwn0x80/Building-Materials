@@ -94,7 +94,7 @@ export const BuyerNavbar = (props: {}) => {
                     fontWeight: isActive ? "bold" : "",
                   };
                 }}
-                className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
+                className='px-2 flex items-center text-white whitespace-nowrap'
                 key={'Log in'}
                 to={"/login"}
               // aria-current={item.current ? 'page' : undefined}
@@ -110,7 +110,7 @@ export const BuyerNavbar = (props: {}) => {
                     fontWeight: isActive ? "bold" : "",
                   };
                 }}
-                className='pl-2 flex items-center text-white whitespace-nowrap min-w-[65px]'
+                className='min-w-20   px-2 flex items-center text-white whitespace-nowrap '
                 key={'account'}
                 to={"/account"}
               // aria-current={item.current ? 'page' : undefined}
@@ -129,7 +129,7 @@ export const BuyerNavbar = (props: {}) => {
                     fontWeight: isActive ? "bold" : "",
                   };
                 }}
-                className='px-2 flex items-center text-white whitespace-nowrap '
+                className='min-w-24 px-2 flex items-center text-white whitespace-nowrap '
                 key={item.name}
                 to={item.href}
                 aria-current={item.current ? 'page' : undefined}
